@@ -1,0 +1,36 @@
+ name: CI Pipeline for Azure Databricks
+
+ on:
+   push:
+     branches:
+       - main
+   pull_request:
+     branches:
+       - main
+
+ jobs:
+   deploy:
+     runs-on: ubuntu-latest
+
+     steps:
+     - name: Checkout code
+       uses: actions/checkout@v3
+
+     - name: Set up Python
+       uses: actions/setup-python@v4
+       with:
+         python-version: '3.x'
+
+     - name: Install Databricks CLI
+       run: |
+         pip install databricks-cli
+
+     - name: Configure Databricks CLI
+       run: |
+         databricks configure --token <<EOF
+         $
+         $
+         EOF
+
+     - name: Upload sample data to DBFS
+       run: databricks fs cp sample_sales.csv dbfs:/FileStore/sample_sales.csv --overwrite
